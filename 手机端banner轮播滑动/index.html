@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>手机端banner-自动轮播,带圆点,可滑动，带方向箭</title>
+   <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+<style type="text/css">
+body,h1,h2,h3,h4,h5,h6,p,dl,dd,ul,ol,pre,form,input,textarea,th,td,select{margin:0;padding:0;}
+em{font-style:normal}
+li{list-style:none}
+a{text-decoration:none;}
+img{border:none; vertical-align:top;}
+table{border-collapse:collapse;}
+textarea{ resize:none;overflow:auto;}
+.slider {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+/*盒子带容器*/
+.slides {
+    height: auto;
+    /* Simple clear fix */
+    overflow: hidden;
+    /**
+         * Prevent blinking issue
+         * Not tested. Experimental.
+         */
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    /**
+         * Here is CSS transitions
+         * responsible for slider animation in modern broswers
+         */
+    -webkit-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+    -moz-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+    -ms-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+    -o-transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+    transition: all 500ms cubic-bezier(0.165, 0.840, 0.440, 1.000);
+}
+.slide {
+    height: auto;
+    float: left;
+    clear: none;
+}
+.slider-arrows {
+}
+.slider-arrow {
+    position: absolute;
+    display: block;
+    margin-bottom: -20px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    font-size: 2em;
+    background-color: #333;
+    background-color: rgba(50,50,50,.3);
+    border-radius: 50%;
+}
+/*左右按钮样式及放置位置*/
+.slider-arrow--right {
+    bottom: 50%;
+    right: 30px;
+}
+.slider-arrow--left {
+    bottom: 50%;
+    left: 30px;
+}
+
+.slider-nav {
+    position: absolute;
+    bottom: 30px;
+}
+.slider-nav__item {  /*nva样式*/
+    width: 12px;
+    height: 12px;
+    float: left;
+    clear: none;
+    display: block;
+    margin: 0 5px;
+    background: black;
+    border-radius: 100%;
+}
+.slider-nav__item:hover {
+    background: #ccc;
+}
+.slider-nav__item--current {
+    background: #ccc;
+}
+
+</style>
+<script type="text/javascript">
+     (function(e,t,n,r){function o(r,i){var o=this;o.options=e.extend({},s,i);o.parent=r;o.wrapper=o.parent.children();o.slides=o.wrapper.children();o.currentSlide=0;o.CSS3support=true;o.init();o.build();o.play();if(o.options.touchDistance){o.swipe()}e(n).on("keyup",function(e){if(e.keyCode===39)o.slide(1);if(e.keyCode===37)o.slide(-1)});o.parent.add(o.arrows).add(o.nav).on("mouseover mouseout",function(e){o.pause();if(e.type==="mouseout")o.play()});e(t).on("resize",function(){o.init();o.slide(0)});return{current:function(){return-o.currentSlide+1},play:function(){o.play()},pause:function(){o.pause()},next:function(e){o.slide(1,false,e)},prev:function(e){o.slide(-1,false,e)},jump:function(e,t){o.slide(e-1,true,t)},nav:function(e){if(o.navWrapper){o.navWrapper.remove()}o.options.nav=e?e:o.options.nav;o.navigation()},arrows:function(e){if(o.arrowsWrapper){o.arrowsWrapper.remove()}o.options.arrows=e?e:o.options.arrows;o.arrows()}}}function u(e){var i=false,s="Khtml ms O Moz Webkit".split(" "),o=n.createElement("div"),u=null;e=e.toLowerCase();if(o.style[e]!==r)i=true;if(i===false){u=e.charAt(0).toUpperCase()+e.substr(1);for(var a=0;a<s.length;a++){if(o.style[s[a]+u]!==r){i=true;break}}}if(t.opera){if(t.opera.version()<13)i=false}return i}var i="glide",s={autoplay:4e3,animationTime:500,arrows:true,arrowsWrapperClass:"slider-arrows",arrowMainClass:"slider-arrow",arrowRightClass:"slider-arrow--right",arrowRightText:"next",arrowLeftClass:"slider-arrow--left",arrowLeftText:"prev",nav:true,navCenter:true,navClass:"slider-nav",navItemClass:"slider-nav__item",navCurrentItemClass:"slider-nav__item--current",touchDistance:60};o.prototype.build=function(){var e=this;if(e.options.arrows)e.arrows();if(e.options.nav)e.navigation()};o.prototype.navigation=function(){var t=this;if(t.slides.length>1){var n=t.options,r=t.options.nav===true?t.parent:t.options.nav;t.navWrapper=e("<div />",{"class":n.navClass}).appendTo(r);var i=t.navWrapper,s;for(var o=0;o<t.slides.length;o++){s=e("<a />",{href:"#","class":n.navItemClass,"data-distance":o}).appendTo(i);i[o+1]=s}var u=i.children();u.eq(0).addClass(n.navCurrentItemClass);if(n.navCenter){i.css({left:"50%",width:u.outerWidth(true)*u.length,"margin-left":-i.outerWidth(true)/2})}u.on("click touchstart",function(n){n.preventDefault();t.slide(e(this).data("distance"),true)})}};o.prototype.arrows=function(){var t=this;if(t.slides.length>1){var n=t.options,r=t.options.arrows===true?t.parent:t.options.arrows;t.arrowsWrapper=e("<div />",{"class":n.arrowsWrapperClass}).appendTo(r);var i=t.arrowsWrapper;i.right=e("<a />",{href:"#","class":n.arrowMainClass+" "+n.arrowRightClass,"data-distance":"1",html:n.arrowRightText}).appendTo(i);i.left=e("<a />",{href:"#","class":n.arrowMainClass+" "+n.arrowLeftClass,"data-distance":"-1",html:n.arrowLeftText}).appendTo(i);i.children().on("click touchstart",function(n){n.preventDefault();t.slide(e(this).data("distance"),false)})}};o.prototype.slide=function(e,t,n){var r=this,i=t?0:r.currentSlide,s=-(r.slides.length-1),o=r.options.navCurrentItemClass,u=r.slides.spread;r.pause();if(i===0&&e===-1){i=s}else if(i===s&&e===1){i=0}else{i=i+ -e}var a=u*i+"px";if(r.CSS3support){r.wrapper.css({"-webkit-transform":"translate3d("+a+", 0px, 0px)","-moz-transform":"translate3d("+a+", 0px, 0px)","-ms-transform":"translate3d("+a+", 0px, 0px)","-o-transform":"translate3d("+a+", 0px, 0px)",transform:"translate3d("+a+", 0px, 0px)"})}else{r.wrapper.stop().animate({"margin-left":a},r.options.animationTime)}if(r.options.nav){r.navWrapper.children().eq(-i).addClass(o).siblings().removeClass(o)}r.currentSlide=i;if(n!==""&&typeof n==="function")n();r.play()};o.prototype.play=function(){var e=this;if(e.options.autoplay){e.auto=setInterval(function(){e.slide(1,false)},e.options.autoplay)}};o.prototype.pause=function(){if(this.options.autoplay){this.auto=clearInterval(this.auto)}};o.prototype.swipe=function(){var e=this,t,n,r,i,s,o,u,a,f,l=180/Math.PI,c,h,p,d;e.parent.on("touchstart",function(e){t=e.originalEvent.touches[0]||e.originalEvent.changedTouches[0];r=t.pageX;i=t.pageY});e.parent.on("touchmove",function(e){t=e.originalEvent.touches[0]||e.originalEvent.changedTouches[0];s=t.pageX;o=t.pageY;c=s-r;h=o-i;p=Math.abs(c<<2);d=Math.abs(h<<2);u=Math.sqrt(p+d);a=Math.sqrt(d);f=Math.asin(a/u);if(f*l<32)e.preventDefault()});e.parent.on("touchend",function(i){t=i.originalEvent.touches[0]||i.originalEvent.changedTouches[0];n=t.pageX-r;if(n>e.options.touchDistance){e.slide(-1)}else if(n<-e.options.touchDistance){e.slide(1)}})};o.prototype.init=function(){var e=this,t=e.parent.width();e.slides.spread=t;e.wrapper.width(t*e.slides.length);e.slides.width(e.slides.spread);if(!u("transition")||!u("transform"))e.CSS3support=false};e.fn[i]=function(t){return this.each(function(){if(!e.data(this,"api_"+i)){e.data(this,"api_"+i,new o(e(this),t))}})}})(jQuery,window,document)
+</script>
+
+<!-- 通用头部开始 -->
+<div class="slider">
+    <ul class="slides">
+        <li class="slide">
+            <div class="box">
+            <img src="http://img.hb.aicdn.com/32760d2746c2765aad48f126c0d6d6207aa452ff1ce5d-0L6ASy_fw658" alt="" style="width:100%">
+            </div>
+        </li>
+        <li class="slide">
+            <div class="box">
+            <img src="http://img.hb.aicdn.com/32760d2746c2765aad48f126c0d6d6207aa452ff1ce5d-0L6ASy_fw658" alt="" style="width:100%">
+            </div>
+        </li>
+        <li class="slide">
+            <div class="box">
+            <img src="http://img.hb.aicdn.com/32760d2746c2765aad48f126c0d6d6207aa452ff1ce5d-0L6ASy_fw658" alt="" style="width:100%">
+            </div>
+        </li>
+        <li class="slide">
+            <div class="box">
+            <img src="http://img.hb.aicdn.com/32760d2746c2765aad48f126c0d6d6207aa452ff1ce5d-0L6ASy_fw658" alt="" style="width:100%">
+            </div>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+    var glide = $('.slider').glide({
+        //autoplay:true,//是否自动播放 默认值 true如果不需要就设置此值
+        animationTime:500, //动画过度效果，只有当浏览器支持CSS3的时候生效
+        arrows:false, //是否显示左右导航器
+        arrowsWrapperClass: "arrowsWrapper",//滑块箭头导航器外部DIV类名
+        arrowMainClass: "slider-arrow",//滑块箭头公共类名
+        arrowRightClass:"slider-arrow--right",//滑块右箭头类名
+        arrowLeftClass:"slider-arrow--left",//滑块左箭头类名
+        arrowRightText:">",//定义左右导航器文字或者符号也可以是类
+        arrowLeftText:"<",
+
+        nav:true, //主导航器也就是本例中显示的小方块
+        navCenter:true, //主导航器位置是否居中
+        navClass:"slider-nav",//主导航器外部div类名
+        navItemClass:"slider-nav__item", //本例中小方块的样式
+        navCurrentItemClass:"slider-nav__item--current" //被选中后的样式
+    });
+ </script>
+
+
+</body>
+</html>
